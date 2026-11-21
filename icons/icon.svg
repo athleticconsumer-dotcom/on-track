@@ -1,18 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#23907f"/>
-      <stop offset="1" stop-color="#0f4f46"/>
-    </linearGradient>
-    <linearGradient id="arc" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#e8f6f2"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="150" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="34"/>
-  <circle cx="256" cy="256" r="150" fill="none" stroke="url(#arc)" stroke-width="34" stroke-linecap="round"
-          stroke-dasharray="706.9 942.5" transform="rotate(-90 256 256)"/>
-  <circle cx="106" cy="256" r="17" fill="#ef8358"/>
-  <path d="M190 262 L238 310 L328 214" fill="none" stroke="#ffffff" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<linearGradient id="t3bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3a67"/><stop offset=".6" stop-color="#b8566a"/><stop offset="1" stop-color="#f2a65a"/></linearGradient>
+<radialGradient id="t3sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3d6"/><stop offset=".7" stop-color="#ffd98a"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="512" height="512" fill="url(#t3bg)"/>
+<circle cx="256" cy="210" r="170" fill="url(#t3sun)" opacity=".55"/>
+<path d="M40 470 C150 432 362 432 472 470 L472 512 L40 512 Z" fill="#141a33"/>
+<path d="M240 452 C246 390 248 350 240 312 L272 312 C264 350 266 390 272 452 Z" fill="#141a33"/>
+<path d="M250 360 C226 340 204 332 180 328 M262 340 C288 316 310 308 336 304" stroke="#141a33" stroke-width="14" fill="none" stroke-linecap="round"/>
+<path d="M256 82 C352 82 412 152 406 232 C402 300 340 330 256 330 C172 330 110 300 106 232 C100 152 160 82 256 82 Z" fill="#141a33"/>
+<circle cx="196" cy="186" r="13" fill="#f7c948"/><circle cx="318" cy="160" r="13" fill="#f7c948"/>
+<circle cx="300" cy="262" r="13" fill="#f7c948"/><circle cx="212" cy="270" r="11" fill="#f7c948"/>
+<circle cx="256" cy="210" r="12" fill="#f7c948"/><circle cx="360" cy="226" r="10" fill="#f7c948"/><circle cx="152" cy="232" r="10" fill="#f7c948"/>
 </svg>
