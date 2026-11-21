@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="On Track">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>On Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style id="css">
+:root{
+  --bg:#f5f3ee;--card:#ffffff;--ink:#1d1c1a;--muted:#78746c;--faint:#b3aea4;--line:#e8e4db;--soft:#f0ede6;
+  --lang:#1d7a6c;--lang-soft:#e3f1ee;--sport:#cf5a2c;--sport-soft:#fbe9e1;--deen:#4a58b0;--deen-soft:#e7e9f7;--warn:#a86a12;--warn-soft:#fdf2dc;
+  --radius:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#141413;--card:#1e1d1b;--ink:#f1eee8;--muted:#a09b91;--faint:#5f5b54;--line:#2f2d2a;--soft:#262522;
+  --lang:#4fb7a6;--lang-soft:#1b302c;--sport:#ef8358;--sport-soft:#3a2219;--deen:#93a0f2;--deen-soft:#22253a;--warn:#e7b25a;--warn-soft:#33281a;}
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 80px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:22px;letter-spacing:-.02em}
+.brand small{display:block;font-weight:500;font-size:12.5px;color:var(--muted);letter-spacing:0}
+.status{font-size:12px;color:var(--muted);padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--card);white-space:nowrap}
+.status.warn{color:var(--warn);border-color:var(--warn);background:var(--warn-soft)}
+.tabs{display:flex;gap:4px;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:18px}
+.tabs button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:9px;font-weight:600;font-size:14px;color:var(--muted)}
+.tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.daynav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.daynav h2{margin:0;font-size:18px;font-weight:700;flex:1;text-align:center}
+.iconbtn{border:1px solid var(--line);background:var(--card);width:38px;height:38px;border-radius:11px;font-size:18px;line-height:1;display:grid;place-items:center}
+.iconbtn:disabled{opacity:.35;cursor:default}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600}
+.hero{display:flex;align-items:center;gap:18px}
+.hero .txt{flex:1}
+.hero .big{font-size:15px;font-weight:700;margin:0 0 4px}
+.hero .sub{font-size:13.5px;color:var(--muted);margin:0;line-height:1.45}
+.ring{flex:none}
+.alert{display:flex;gap:10px;align-items:flex-start;background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);color:var(--ink);border-radius:12px;padding:10px 12px;font-size:13.5px;margin-top:12px;line-height:1.45}
+.alert b{color:var(--warn)}
+.area-h{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin:22px 4px 8px;color:var(--muted)}
+.area-h i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.goal-h{font-size:12.5px;font-weight:700;color:var(--muted);margin:12px 2px 6px;display:flex;justify-content:space-between}
+.goal-h:first-child{margin-top:0}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;padding:10px 6px;border-radius:12px;min-height:50px}
+button.row:hover{background:var(--soft)}
+.chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--faint);flex:none;display:grid;place-items:center;transition:.15s}
+.chk svg{opacity:0;transition:.15s}
+.on .chk{background:var(--c);border-color:var(--c)}
+.on .chk svg{opacity:1}
+.rname{flex:1;font-size:15px;font-weight:600;line-height:1.3}
+.on .rname{color:var(--muted)}
+.rmeta{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.streak{font-size:12px;font-weight:700;color:var(--c);white-space:nowrap}
+.mrow{flex-wrap:wrap}
+.mrow .rname{min-width:140px}
+.stepper button[aria-label*="5"]{width:auto;padding:0 9px;font-size:13px}
+.timer{border:0;background:var(--c);color:#fff;border-radius:10px;padding:0 12px;height:32px;font-weight:700;font-size:13px;min-width:78px;font-variant-numeric:tabular-nums}
+.timer.running{background:var(--ink);color:var(--card)}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:32px;height:32px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:17px;font-weight:700}
+.stepper span{min-width:44px;text-align:center;font-weight:700;font-size:14px}
+.tinput{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 11px;font-size:15px}
+.tinput:focus,textarea:focus,select:focus,.sinput:focus{outline:2px solid var(--lang);outline-offset:-1px}
+.lnk{font-size:12px;font-weight:700;color:var(--c);text-decoration:none;border:1px solid var(--line);padding:4px 8px;border-radius:8px;white-space:nowrap}
+.bar{height:6px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar>div{height:100%;background:var(--c);border-radius:99px}
+.refl label{display:block;font-size:13px;font-weight:700;margin:0 0 6px}
+.refl textarea{width:100%;min-height:64px;resize:vertical;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 11px;font-size:14.5px;line-height:1.45;margin-bottom:12px}
+.refl textarea:last-child{margin-bottom:0}
+.muted{color:var(--muted)}
+h3{margin:0 0 4px;font-size:16px}
+.small{font-size:13px;line-height:1.45}
+/* week */
+.wk{display:grid;grid-template-columns:minmax(120px,1fr) repeat(7,minmax(30px,40px));gap:4px 4px;align-items:center}
+.wk .hd{font-size:11.5px;font-weight:700;color:var(--muted);text-align:center;line-height:1.25}
+.wk .hd.today{color:var(--ink)}
+.wk .nm{font-size:13px;font-weight:600;line-height:1.25;padding-right:6px;overflow:hidden;text-overflow:ellipsis}
+.wk .nm small{display:block;color:var(--muted);font-weight:600;font-size:11px}
+.cell{width:30px;height:30px;border-radius:9px;border:0;margin:0 auto;display:grid;place-items:center;font-size:12px;font-weight:700;background:transparent;padding:0}
+.cell.full{background:var(--c);color:#fff}
+.cell.part{background:color-mix(in srgb,var(--c) 30%,transparent);color:var(--ink)}
+.cell.miss{background:var(--soft);color:var(--faint)}
+.cell.open{border:2px dashed var(--line)}
+.cell.off{color:var(--faint);cursor:default}
+.wk .sep{grid-column:1/-1;height:1px;background:var(--line);margin:6px 0}
+.wk .score{font-size:11.5px;font-weight:800;text-align:center}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:12px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+/* goals */
+.gcard{border-left:4px solid var(--c)}
+.gtop{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.gpct{font-weight:800;font-size:20px;color:var(--c)}
+.hlist{margin-top:12px;display:grid;gap:6px}
+.hlist div{display:flex;justify-content:space-between;font-size:13px;gap:10px}
+.words{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.words span{background:var(--soft);border-radius:8px;padding:4px 8px;font-size:13px}
+/* settings */
+.srow{border-top:1px solid var(--line);padding:12px 0;display:grid;gap:8px}
+.srow:first-of-type{border-top:0}
+.sline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sinput{flex:1;min-width:150px;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;font-size:14px}
+select{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 8px;font-size:13.5px}
+.days{display:flex;gap:4px}
+.days button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:12px;font-weight:700;color:var(--muted)}
+.days button.on{background:var(--c);border-color:var(--c);color:#fff}
+.mini{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 9px;font-size:12.5px;font-weight:600}
+.mini.install{background:var(--lang);border-color:var(--lang);color:#fff}
+.mini.danger{color:#c23b2a}
+.mini:disabled{opacity:.35;cursor:default}
+.addbtn{width:100%;border:1.5px dashed var(--line);background:transparent;border-radius:12px;padding:11px;font-weight:700;color:var(--muted);margin-top:8px}
+.num{width:64px}
+.empty{text-align:center;color:var(--muted);padding:18px 0;font-size:14px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="application/json" id="state">{"v":1,"start":"2026-11-21","log":{"2026-11-21":{"q2":20,"c1":2,"l2":20,"l3":25}},"notes":{},"goals":[{"id":"ch","area":"deen","name":"Curing the Heart","target":"Open the app after every prayer and before sleep."},{"id":"qr","area":"deen","name":"Qur’an","target":"Daily hifdh and daily reading."},{"id":"kt","area":"deen","name":"Kitab","target":"Ad-Dā’ wa ad-Dawā’ (The Disease and the Cure)."},{"id":"ar","area":"lang","name":"Arabic","target":"Near-native Fusha over the long run."},{"id":"fr","area":"lang","name":"French","target":"Stay fluent and keep polishing."},{"id":"ru","area":"lang","name":"Russian","target":"From A2/B1 up to B2."},{"id":"ku","area":"lang","name":"Kumyk","target":"Slow and steady, from everyday life."},{"id":"mm","area":"sport","name":"Morning Mirror","target":"Photo and weight every morning."},{"id":"sl","area":"sport","name":"Streetlifting & calisthenics","target":"+60 kg pull-up, +80 kg dip, 150 kg squat. Skills: planche, freestanding handstand, full iron cross."},{"id":"kb","area":"sport","name":"Kickboxing","target":"Amateur title in 2027."}],"habits":[{"id":"c1","goal":"ch","name":"Opened after prayer & before sleep","type":"count","target":6,"days":[0,1,2,3,4,5,6],"link":"https://athleticconsumer-dotcom.github.io/curing-the-heart/"},{"id":"q1","goal":"qr","name":"Hifdh journey","type":"minutes","target":20,"days":[0,1,2,3,4,5,6]},{"id":"q2","goal":"qr","name":"Qur’an reading","type":"minutes","target":20,"days":[0,1,2,3,4,5,6]},{"id":"k1","goal":"kt","name":"Kitab reading","type":"minutes","target":20,"days":[0,1,2,3,4,5,6]},{"id":"l1","goal":"ar","name":"Arabic time","type":"minutes","target":60,"days":[0,1,2,3,4,5,6]},{"id":"l2","goal":"fr","name":"French time","type":"minutes","target":20,"days":[0,1,2,3,4,5,6]},{"id":"l3","goal":"ru","name":"Russian time","type":"minutes","target":20,"days":[0,1,2,3,4,5,6]},{"id":"l4","goal":"ku","name":"Kumyk time","type":"minutes","target":20,"days":[0,1,2,3,4,5,6]},{"id":"h12","goal":"mm","name":"Used Morning Mirror","type":"check","days":[0,1,2,3,4,5,6],"link":"https://athleticconsumer-dotcom.github.io/morning-mirror/"},{"id":"h13","goal":"sl","name":"Streetlifting session","type":"check","days":[1,3,5]},{"id":"h14","goal":"sl","name":"Planche / gymnastics (Movement Snacks)","type":"check","days":[0,1,2,3,4,5,6]},{"id":"h15","goal":"kb","name":"Kickboxing training","type":"check","days":[2,5]}]}</script>
+<script type="module" id="app">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ===== Paste your Firebase web config here (Project settings > Your apps > Web app) ===== */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_PROJECT_ID.appspot.com",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID"
+};
+/* ========================================================================================= */
+
+(function(){
+"use strict";
+var ALL=[0,1,2,3,4,5,6];
+var AREAS=[["deen","Deen"],["lang","Languages"],["sport","Sport"]];
+var MM_URL="https://athleticconsumer-dotcom.github.io/morning-mirror/";
+var DEFAULT={
+  v:1,start:null,log:{},notes:{},
+  goals:[
+    {id:"ch",area:"deen",name:"Curing the Heart",target:"Open the app after every prayer and before sleep."},
+    {id:"ar",area:"lang",name:"Arabic",target:"Near-native Fusha over the long run."},
+    {id:"fr",area:"lang",name:"French",target:"Stay fluent and keep polishing."},
+    {id:"ru",area:"lang",name:"Russian",target:"From A2/B1 up to B2."},
+    {id:"ku",area:"lang",name:"Kumyk",target:"Slow and steady, from everyday life."},
+    {id:"mm",area:"sport",name:"Morning Mirror",target:"Photo and weight every morning."},
+    {id:"sl",area:"sport",name:"Streetlifting & calisthenics",target:"+60 kg pull-up, +80 kg dip, 150 kg squat. Skills: planche, freestanding handstand, full iron cross."},
+    {id:"kb",area:"sport",name:"Kickboxing",target:"Amateur title in 2027."}
+  ],
+  habits:[
+    {id:"c1",goal:"ch",name:"Opened after prayer & before sleep",type:"count",target:6,days:ALL,link:"https://athleticconsumer-dotcom.github.io/curing-the-heart/"},
+    {id:"l1",goal:"ar",name:"Arabic time",type:"minutes",target:60,days:ALL},
+    {id:"l2",goal:"fr",name:"French time",type:"minutes",target:20,days:ALL},
+    {id:"l3",goal:"ru",name:"Russian time",type:"minutes",target:20,days:ALL},
+    {id:"l4",goal:"ku",name:"Kumyk time",type:"minutes",target:20,days:ALL},
+    {id:"h12",goal:"mm",name:"Used Morning Mirror",type:"check",days:ALL,link:MM_URL},
+    {id:"h13",goal:"sl",name:"Streetlifting session",type:"check",days:[1,3,5]},
+    {id:"h14",goal:"sl",name:"Planche / gymnastics (Movement Snacks)",type:"check",days:ALL},
+    {id:"h15",goal:"kb",name:"Kickboxing training",type:"check",days:[2,5]}
+  ]
+};
+
+/* ---------- state ---------- */
+var SEED=null;
+try{SEED=JSON.parse(document.getElementById("state").textContent)}catch(e){SEED=null}
+if(!SEED)SEED=DEFAULT;
+function normalize(x){x.log=x.log||{};x.notes=x.notes||{};if(!x.start)x.start=todayKey();return x}
+var S=normalize(JSON.parse(JSON.stringify(SEED)));
+
+var mode="auth", user=null, ref=null, unsub=null, timer=null, saving=false, pendingRender=false, lastWritten=null, errMsg="";
+var view="today", cur=todayKey();
+try{
+  var hv=(location.hash||"").replace("#","");
+  var sv=sessionStorage.getItem("ontrack-view");
+  view=["today","week","goals","habits"].indexOf(hv)>=0?hv:(sv||"today");
+  var sc=sessionStorage.getItem("ontrack-cur");if(sc&&sc<=todayKey())cur=sc;
+}catch(e){}
+
+var auth=null, db=null;
+if(String(firebaseConfig.apiKey).indexOf("PASTE")===0){mode="noconfig"}
+else{
+  try{
+    var fbApp=initializeApp(firebaseConfig);auth=getAuth(fbApp);db=getFirestore(fbApp);
+    onAuthStateChanged(auth,function(u){
+      if(unsub){unsub();unsub=null}
+      user=u;
+      if(!u){mode="signedout";render();return}
+      mode="loading";render();
+      ref=doc(db,"ontrack",u.uid);
+      unsub=onSnapshot(ref,function(snap){
+        if(!snap.exists()){S=normalize(JSON.parse(JSON.stringify(SEED)));mode="live";writeNow();render();return}
+        if(snap.metadata.hasPendingWrites)return;
+        var txt=snap.data().state;
+        if(mode==="live"&&(timer||saving))return; /* local edits win; they are about to be written */
+        if(mode==="live"&&txt===lastWritten){setStatus();return}
+        try{S=normalize(JSON.parse(txt))}catch(e){}
+        lastWritten=txt;mode="live";
+        if(typing())pendingRender=true;else render();
+      },function(err){mode="error";errMsg=err&&err.message||String(err);render()});
+    });
+  }catch(e){mode="error";errMsg=e.message||String(e)}
+}
+function signIn(){
+  var p=new GoogleAuthProvider();
+  signInWithPopup(auth,p).catch(function(e){
+    if(e&&/popup/.test(e.code||""))signInWithRedirect(auth,p);
+    else{mode="error";errMsg=e.message||String(e);render()}
+  });
+}
+
+/* ---------- dates ---------- */
+function pad(n){return String(n).padStart(2,"0")}
+function key(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function parse(k){var p=k.split("-").map(Number);return new Date(p[0],p[1]-1,p[2])}
+function addDays(k,n){var d=parse(k);d.setDate(d.getDate()+n);return key(d)}
+function todayKey(){return key(new Date())}
+function dow(k){return parse(k).getDay()}
+function fmt(k,o){return parse(k).toLocaleDateString("en-GB",o)}
+
+/* ---------- logic ---------- */
+function goalOf(h){for(var i=0;i<S.goals.length;i++)if(S.goals[i].id===h.goal)return S.goals[i];return S.goals[0]}
+function color(area){return area==="sport"?"var(--sport)":area==="deen"?"var(--deen)":"var(--lang)"}
+function scheduled(h,k){return h.days.indexOf(dow(k))>=0&&k>=(h.since||S.start)}
+function val(h,k){return S.log[k]?S.log[k][h.id]:undefined}
+function prog(h,k){
+  var v=val(h,k);
+  if(h.type==="count"||h.type==="minutes")return Math.min(1,(v||0)/(h.target||1));
+  if(h.type==="text")return v&&String(v).trim()?1:0;
+  return v?1:0;
+}
+function setVal(h,k,v){
+  S.log[k]=S.log[k]||{};
+  if(v===undefined||v===false||v===0||v===""){delete S.log[k][h.id];if(!Object.keys(S.log[k]).length)delete S.log[k]}
+  else S.log[k][h.id]=v;
+  save();
+}
+function streak(h){
+  var t=todayKey(),k=prog(h,t)>=1?t:addDays(t,-1),s=0,guard=0;
+  while(guard++<800&&k>=(h.since||S.start)){
+    if(scheduled(h,k)){if(prog(h,k)>=1)s++;else break}
+    k=addDays(k,-1);
+  }
+  return s;
+}
+function dayStats(k,list){
+  var hs=(list||S.habits).filter(function(h){return scheduled(h,k)});
+  var sum=0,full=0;hs.forEach(function(h){var p=prog(h,k);sum+=p;if(p>=1)full++});
+  return {n:hs.length,sum:sum,full:full,pct:hs.length?Math.round(sum/hs.length*100):null};
+}
+function rangePct(from,to,list){
+  var t=todayKey(),sum=0,n=0,k=from;
+  while(k<=to&&k<=t){
+    (list||S.habits).forEach(function(h){
+      if(!scheduled(h,k))return;var p=prog(h,k);
+      if(k===t&&p===0)return; /* don't count today against you yet */
+      sum+=p;n++;
+    });
+    k=addDays(k,1);
+  }
+  return n?Math.round(sum/n*100):null;
+}
+function goalHabits(g){return S.habits.filter(function(h){return h.goal===g.id})}
+function drift(g){
+  var hs=goalHabits(g);if(!hs.length)return 0;
+  var t=todayKey();
+  if(hs.some(function(h){return scheduled(h,t)&&prog(h,t)>0}))return 0;
+  var k=addDays(t,-1),missed=0,steps=0;
+  while(steps++<60&&k>=S.start){
+    var sh=hs.filter(function(h){return scheduled(h,k)});
+    if(sh.length){if(sh.some(function(h){return prog(h,k)>0}))break;missed++}
+    k=addDays(k,-1);
+  }
+  return missed>=3?missed:0;
+}
+
+/* ---------- saving ---------- */
+function typing(){var a=document.activeElement;return a&&(a.tagName==="INPUT"||a.tagName==="TEXTAREA")}
+function save(){
+  if(mode!=="live")return;
+  clearTimeout(timer);timer=setTimeout(writeNow,700);
+  setStatus();
+}
+function writeNow(){
+  clearTimeout(timer);timer=null;
+  if(!ref)return;
+  saving=true;setStatus();
+  lastWritten=JSON.stringify(S);
+  setDoc(ref,{state:lastWritten,updatedAt:Date.now()}).then(function(){saving=false;setStatus()},function(e){
+    saving=false;var st=document.getElementById("status");if(st){st.textContent="Not saved: "+(e.code||e.message);st.className="status warn"}
+  });
+}
+function setStatus(){
+  var st=document.getElementById("status");if(!st)return;
+  st.textContent=saving||timer?"Saving\u2026":"Saved";st.className="status";
+}
+
+/* ---------- dom helpers ---------- */
+function el(tag,attrs){
+  var e=document.createElement(tag);attrs=attrs||{};
+  for(var k in attrs){var v=attrs[k];if(v==null||v===false)continue;
+    if(k==="class")e.className=v;else if(k==="style")e.style.cssText=v;else if(k==="html")e.innerHTML=v;
+    else if(k.slice(0,2)==="on")e.addEventListener(k.slice(2),v);else if(k==="value")e.value=v;
+    else e.setAttribute(k,v===true?"":v)}
+  for(var i=2;i<arguments.length;i++)add(e,arguments[i]);
+  return e;
+}
+function add(e,c){if(c==null||c===false)return;if(Array.isArray(c)){c.forEach(function(x){add(e,x)});return}e.append(c.nodeType?c:document.createTextNode(String(c)))}
+var CHECK='<svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 7.4l2.6 2.6L11 4.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function ring(pct,size){
+  var r=size/2-6,c=2*Math.PI*r,p=pct==null?0:pct;
+  return el("div",{class:"ring",html:'<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--soft)" stroke-width="8"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--lang)" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+(c*p/100)+' '+c+'" transform="rotate(-90 '+size/2+' '+size/2+')"/><text x="50%" y="52%" text-anchor="middle" dominant-baseline="middle" font-family="Manrope,sans-serif" font-weight="800" font-size="'+(size/4.2)+'" fill="var(--ink)">'+(pct==null?"–":p+"%")+'</text></svg>'});
+}
+function deferRender(){pendingRender=true;setTimeout(function(){if(!typing()){pendingRender=false;render()}},0)}
+document.addEventListener("focusout",function(){setTimeout(function(){if(pendingRender&&!typing()){pendingRender=false;render()}},0)});
+
+/* ---------- views ---------- */
+function mmss(ms){var s=Math.max(0,Math.floor(ms/1000));var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+":"+pad(m):m)+":"+pad(x)}
+function runMins(){return S.running?Math.round((Date.now()-S.running.t)/60000):0}
+function stopTimer(){
+  var r=S.running;if(!r)return;
+  var h=S.habits.filter(function(x){return x.id===r.h})[0];
+  var m=runMins();S.running=null;
+  if(h&&m>0)setVal(h,r.k,(val(h,r.k)||0)+m);else save();
+}
+function startTimer(h,k){if(S.running)stopTimer();S.running={h:h.id,k:k,t:Date.now()};save()}
+setInterval(function(){
+  if(!S.running)return;
+  document.querySelectorAll("[data-run]").forEach(function(e){e.textContent=mmss(Date.now()-S.running.t)});
+  document.querySelectorAll("[data-runmin]").forEach(function(e){
+    var h=S.habits.filter(function(x){return x.id===e.dataset.runmin})[0];if(!h)return;
+    e.textContent=((val(h,S.running.k)||0)+Math.floor((Date.now()-S.running.t)/60000))+" of "+h.target+" min";
+  });
+},1000);
+function habitRow(h,k){
+  var g=goalOf(h),c=color(g.area),p=prog(h,k),st=streak(h);
+  var stTxt=st>1?st+" in a row":"";
+  if(h.type==="minutes"){
+    var mv=val(h,k)||0,run=S.running&&S.running.h===h.id&&S.running.k===k;
+    var shown=run?mv+Math.floor((Date.now()-S.running.t)/60000):mv;
+    return el("div",{class:"row mrow"+(p>=1?" on":""),style:"--c:"+c},
+      el("div",{class:"chk",html:CHECK}),
+      el("div",{class:"rname"},h.name,
+        el("div",{class:"rmeta"},el("span",run?{"data-runmin":h.id}:null,shown+" of "+h.target+" min"),stTxt?" \u00b7 "+stTxt:""),
+        el("div",{class:"bar",style:"margin-top:6px"},el("div",{style:"width:"+Math.min(100,shown/h.target*100)+"%"}))),
+      el("div",{class:"stepper"},
+        el("button",{"aria-label":"minus 5 minutes",onclick:function(){setVal(h,k,Math.max(0,mv-5));render()}},"\u22125"),
+        el("button",{"aria-label":"plus 5 minutes",onclick:function(){setVal(h,k,mv+5);render()}},"+5")),
+      k===todayKey()||run?el("button",{class:"timer"+(run?" running":""),onclick:function(){if(run)stopTimer();else startTimer(h,k);render()}},
+        run?el("span",null,"\u25a0 ",el("span",{"data-run":"1"},mmss(Date.now()-S.running.t))):"\u25b6 Start"):null);
+  }
+  if(h.type==="count"){
+    var v=val(h,k)||0;
+    return el("div",{class:"row"+(p>=1?" on":""),style:"--c:"+c},
+      el("div",{class:"chk",html:CHECK}),
+      el("div",{class:"rname"},h.name,el("div",{class:"rmeta"},v+" of "+h.target+(stTxt?" · "+stTxt:""))),
+      h.link&&k===todayKey()?el("a",{class:"lnk",href:h.link,target:"_blank",rel:"noopener",title:"Opens the app and counts one use",onclick:function(){setVal(h,k,v+1);setTimeout(render,0)}},"Open \u2197"):null,
+      el("div",{class:"stepper"},
+        el("button",{"aria-label":"minus",onclick:function(){setVal(h,k,Math.max(0,v-1));render()}},"−"),
+        el("span",null,v),
+        el("button",{"aria-label":"plus",onclick:function(){setVal(h,k,v+1);render()}},"+")));
+  }
+  if(h.type==="text"){
+    var tv=val(h,k)||"";
+    return el("div",{class:"row"+(p>=1?" on":""),style:"--c:"+c+";flex-wrap:wrap"},
+      el("div",{class:"chk",html:CHECK}),
+      el("div",{class:"rname",style:"flex:0 0 auto"},h.name),
+      el("input",{class:"tinput",placeholder:"Write it down…",value:tv,onchange:function(e){setVal(h,k,e.target.value.trim());deferRender()}}),
+      stTxt?el("span",{class:"streak"},stTxt):null);
+  }
+  return el("button",{class:"row"+(p>=1?" on":""),style:"--c:"+c,onclick:function(e){if(e.target.closest("a"))return;setVal(h,k,p>=1?undefined:true);render()}},
+    el("div",{class:"chk",html:CHECK}),
+    el("div",{class:"rname"},h.name),
+    h.link?el("a",{class:"lnk",href:h.link,target:"_blank",rel:"noopener"},"Open ↗"):null,
+    stTxt?el("span",{class:"streak"},stTxt):null);
+}
+function viewToday(){
+  var k=cur,t=todayKey(),isToday=k===t,ds=dayStats(k);
+  var out=[];
+  out.push(el("div",{class:"daynav"},
+    el("button",{class:"iconbtn","aria-label":"previous day",onclick:function(){cur=addDays(cur,-1);render()}},"‹"),
+    el("h2",null,isToday?"Today, "+fmt(k,{day:"numeric",month:"long"}):fmt(k,{weekday:"long",day:"numeric",month:"long"})),
+    isToday?null:el("button",{class:"pill",onclick:function(){cur=t;render()}},"Today"),
+    el("button",{class:"iconbtn","aria-label":"next day",disabled:isToday,onclick:function(){if(!isToday){cur=addDays(cur,1);render()}}},"›")));
+  var msg=ds.n===0?"Nothing scheduled.":ds.full===ds.n?"Everything done. That’s a day that counts.":ds.full+" of "+ds.n+" done";
+  var wk=rangePct(addDays(t,-6),t);
+  var hero=el("div",{class:"card"},el("div",{class:"hero"},ring(ds.pct,92),
+    el("div",{class:"txt"},el("p",{class:"big"},msg),
+      el("p",{class:"sub"},wk==null?"Your 7-day score appears after the first day.":"Last 7 days: "+wk+"% of what you planned."))));
+  if(isToday){
+    S.goals.forEach(function(g){var d=drift(g);if(d)add(hero,el("div",{class:"alert"},el("span",null,"⚠️"),el("span",null,el("b",null,g.name+": "),"nothing logged on the last "+d+" scheduled days.")))});
+  }
+  out.push(hero);
+  if(S.running){var rh=S.habits.filter(function(x){return x.id===S.running.h})[0];
+    if(rh&&S.running.k!==k)out.push(el("div",{class:"alert"},"\u23f1\ufe0f ",el("span",null,el("b",null,rh.name+" timer running. "),"Go to that day to stop it.")));}
+  AREAS.forEach(function(a){
+    var goals=S.goals.filter(function(g){return g.area===a[0]});
+    if(!goals.length)return;
+    var card=el("div",{class:"card"}),any=false;
+    goals.forEach(function(g){
+      var hs=goalHabits(g).filter(function(h){return scheduled(h,k)});if(!hs.length)return;any=true;
+      var gs=dayStats(k,hs);
+      add(card,el("div",{class:"goal-h"},el("span",null,g.name),el("span",null,gs.full+"/"+gs.n)));
+      hs.forEach(function(h){add(card,habitRow(h,k))});
+    });
+    if(!any)add(card,el("div",{class:"empty"},"Nothing scheduled for this day."));
+    out.push(el("div",{class:"area-h"},el("i",{style:"background:"+color(a[0])}),a[1]),card);
+  });
+  var n=S.notes[k]||{};
+  function note(f){return function(e){S.notes[k]=S.notes[k]||{};S.notes[k][f]=e.target.value;if(!S.notes[k].win&&!S.notes[k].leak)delete S.notes[k];save()}}
+  out.push(el("div",{class:"area-h"},el("i",{style:"background:var(--faint)"}),"End of day check"),
+    el("div",{class:"card refl"},
+      el("label",null,"What moved me forward today?"),
+      el("textarea",{placeholder:"One line is enough",onchange:note("win")},n.win||""),
+      el("label",null,"Where did I choose to waste time?"),
+      el("textarea",{placeholder:"Be honest, nobody else reads this",onchange:note("leak")},n.leak||"")));
+  return out;
+}
+function viewWeek(){
+  var t=todayKey(),off=(dow(cur)+6)%7,ws=addDays(cur,-off),we=addDays(ws,6);
+  var days=[];for(var i=0;i<7;i++)days.push(addDays(ws,i));
+  var pct=rangePct(ws,we),prev=rangePct(addDays(ws,-7),addDays(ws,-1));
+  var out=[];
+  out.push(el("div",{class:"daynav"},
+    el("button",{class:"iconbtn",onclick:function(){cur=addDays(cur,-7);render()}},"‹"),
+    el("h2",null,fmt(ws,{day:"numeric",month:"short"})+" – "+fmt(we,{day:"numeric",month:"short"})),
+    el("button",{class:"iconbtn",disabled:we>=t,onclick:function(){var n=addDays(cur,7);cur=n>t?t:n;render()}},"›")));
+  var cmp=prev==null||pct==null?"":(pct>=prev?"▲ "+(pct-prev)+" points vs. the week before":"▼ "+(prev-pct)+" points vs. the week before");
+  out.push(el("div",{class:"card"},el("div",{class:"hero"},ring(pct,84),el("div",{class:"txt"},
+    el("p",{class:"big"},pct==null?"No data yet for this week":"You did "+pct+"% of what you planned"),
+    el("p",{class:"sub"},cmp||"Ticks from future days don’t count, and today only counts what you’ve done.")))));
+  var grid=el("div",{class:"wk"});
+  add(grid,el("div"));
+  days.forEach(function(d){add(grid,el("div",{class:"hd"+(d===t?" today":"")},fmt(d,{weekday:"short"}).slice(0,2),el("br"),parse(d).getDate()))});
+  var firstArea=true;
+  AREAS.forEach(function(a){
+    if(!S.goals.some(function(g){return g.area===a[0]}))return;
+    if(!firstArea)add(grid,el("div",{class:"sep"}));firstArea=false;
+    S.goals.filter(function(g){return g.area===a[0]}).forEach(function(g){
+      goalHabits(g).forEach(function(h){
+        var c=color(g.area);
+        add(grid,el("div",{class:"nm",title:g.name+" · "+h.name},h.name,el("small",null,g.name)));
+        days.forEach(function(d){
+          if(!scheduled(h,d)){add(grid,el("div",{class:"cell off"},"·"));return}
+          var p=prog(h,d),cls=d>t?"open":p>=1?"full":p>0?"part":d<t?"miss":"open";
+          var label=p>=1?"✓":(h.type==="count"||h.type==="minutes")&&p>0?(val(h,d)||0):"";
+          add(grid,el("button",{class:"cell "+cls,style:"--c:"+c,title:fmt(d,{weekday:"long"}),onclick:function(){
+            if(d>t)return;
+            if(h.type==="check"){setVal(h,d,p>=1?undefined:true);render()}else{cur=d;view="today";render()}
+          }},label));
+        });
+      });
+    });
+  });
+  add(grid,el("div",{class:"sep"}));
+  add(grid,el("div",{class:"nm"},"Day score"));
+  days.forEach(function(d){var s=dayStats(d);add(grid,el("div",{class:"score"},d>t||s.pct==null?"":s.pct+"%"))});
+  out.push(el("div",{class:"card",style:"overflow-x:auto"},grid,
+    el("div",{class:"legend"},
+      el("span",null,el("i",{style:"background:var(--lang)"}),"done"),
+      el("span",null,el("i",{style:"background:color-mix(in srgb,var(--lang) 30%,transparent)"}),"partly"),
+      el("span",null,el("i",{style:"background:var(--soft)"}),"missed"),
+      el("span",null,"· not planned"))));
+  return out;
+}
+function viewGoals(){
+  var t=todayKey(),from=addDays(t,-29),out=[];
+  out.push(el("p",{class:"small muted",style:"margin:0 0 14px"},"Consistency over the last 30 days: how much of what you planned for each goal actually happened."));
+  AREAS.forEach(function(a){
+    if(!S.goals.some(function(g){return g.area===a[0]}))return;
+    out.push(el("div",{class:"area-h"},el("i",{style:"background:"+color(a[0])}),a[1]));
+    S.goals.filter(function(g){return g.area===a[0]}).forEach(function(g){
+      var hs=goalHabits(g),pct=rangePct(from<S.start?S.start:from,t,hs),d=drift(g),c=color(g.area);
+      var card=el("div",{class:"card gcard",style:"--c:"+c},
+        el("div",{class:"gtop"},el("h3",null,g.name),el("span",{class:"gpct"},pct==null?"–":pct+"%")),
+        el("p",{class:"small muted",style:"margin:2px 0 10px"},g.target),
+        el("div",{class:"bar"},el("div",{style:"width:"+(pct||0)+"%"})));
+      if(d)add(card,el("div",{class:"alert"},el("span",null,"⚠️"),el("span",null,el("b",null,"Drifting: "),d+" scheduled days in a row with nothing logged.")));
+      var list=el("div",{class:"hlist"});
+      hs.filter(function(h){return h.type==="minutes"}).forEach(function(h){
+        var tot=0,k=t,g3=0;while(g3++<30&&k>=S.start){tot+=val(h,k)||0;k=addDays(k,-1)}
+        add(card,el("p",{class:"small",style:"margin:10px 0 0"},el("b",null,(tot>=60?Math.floor(tot/60)+" h "+(tot%60)+" min":tot+" min")),el("span",{class:"muted"}," in the last 30 days")));
+      });
+      hs.forEach(function(h){var s=streak(h);add(list,el("div",null,el("span",null,h.name),el("span",{class:"muted"},s?s+" in a row":"–")))});
+      add(card,list);
+      hs.filter(function(h){return h.type==="text"}).forEach(function(h){
+        var words=[],k=t,g2=0;while(g2++<60&&words.length<14&&k>=S.start){var v=val(h,k);if(v)words.push(v);k=addDays(k,-1)}
+        if(words.length)add(card,el("div",{class:"words"},words.map(function(w){return el("span",null,w)})));
+      });
+      out.push(card);
+    });
+  });
+  return out;
+}
+function viewHabits(){
+  var out=[],order=[1,2,3,4,5,6,0],letters=["S","M","T","W","T","F","S"];
+  out.push(el("p",{class:"small muted",style:"margin:0 0 14px"},"Change names, goals and days here. Past ticks are kept when you edit or remove a habit."));
+  AREAS.forEach(function(a){
+    if(!S.goals.some(function(g){return g.area===a[0]}))return;
+    out.push(el("div",{class:"area-h"},el("i",{style:"background:"+color(a[0])}),a[1]));
+    S.goals.filter(function(g){return g.area===a[0]}).forEach(function(g){
+      var c=color(g.area),hs=goalHabits(g);
+      var card=el("div",{class:"card",style:"--c:"+c});
+      add(card,el("div",{class:"sline"},
+        el("input",{class:"sinput",style:"font-weight:700",value:g.name,onchange:function(e){g.name=e.target.value||g.name;save();deferRender()}}),
+        el("select",{onchange:function(e){g.area=e.target.value;save();render()}},
+          el("option",{value:"deen",selected:g.area==="deen"},"Deen"),el("option",{value:"lang",selected:g.area==="lang"},"Languages"),el("option",{value:"sport",selected:g.area==="sport"},"Sport")),
+        el("button",{class:"mini danger",disabled:hs.length>0,title:hs.length?"Move or remove its habits first":"",onclick:function(){S.goals=S.goals.filter(function(x){return x!==g});save();render()}},"Remove goal")));
+      add(card,el("input",{class:"sinput",style:"width:100%;margin:8px 0 4px",placeholder:"What does reaching this goal look like?",value:g.target||"",onchange:function(e){g.target=e.target.value;save()}}));
+      hs.forEach(function(h){
+        var idx=S.habits.indexOf(h);
+        var row=el("div",{class:"srow"},
+          el("div",{class:"sline"},
+            el("input",{class:"sinput",value:h.name,onchange:function(e){h.name=e.target.value||h.name;save();deferRender()}}),
+            el("select",{onchange:function(e){h.type=e.target.value;if(h.type==="count"&&!h.target)h.target=4;if(h.type==="minutes"&&!h.target)h.target=20;save();render()}},
+              el("option",{value:"check",selected:h.type==="check"},"Tick"),
+              el("option",{value:"count",selected:h.type==="count"},"Count"),
+              el("option",{value:"minutes",selected:h.type==="minutes"},"Minutes"),
+              el("option",{value:"text",selected:h.type==="text"},"Note")),
+            h.type==="count"||h.type==="minutes"?el("input",{class:"sinput num",type:"number",min:"1",value:h.target,title:h.type==="minutes"?"Minutes per day":"Daily target",onchange:function(e){h.target=Math.max(1,parseInt(e.target.value,10)||1);save();deferRender()}}):null),
+          el("div",{class:"sline"},
+            el("div",{class:"days"},order.map(function(d){return el("button",{class:h.days.indexOf(d)>=0?"on":"",onclick:function(){
+              if(h.days.indexOf(d)>=0)h.days=h.days.filter(function(x){return x!==d});else h.days=h.days.concat([d]).sort();
+              save();render()}},letters[d])})),
+            el("select",{title:"Goal",onchange:function(e){h.goal=e.target.value;save();render()}},
+              S.goals.map(function(x){return el("option",{value:x.id,selected:x.id===h.goal},x.name)})),
+            el("button",{class:"mini",title:"Move up",disabled:idx===0,onclick:function(){S.habits.splice(idx,1);S.habits.splice(idx-1,0,h);save();render()}},"↑"),
+            el("button",{class:"mini danger",onclick:function(e){
+              if(e.currentTarget.dataset.sure){S.habits=S.habits.filter(function(x){return x!==h});save();render()}
+              else{e.currentTarget.dataset.sure="1";e.currentTarget.textContent="Sure?"}}},"Remove")));
+        add(card,row);
+      });
+      add(card,el("button",{class:"addbtn",onclick:function(){
+        S.habits.push({id:"h"+Date.now().toString(36),goal:g.id,name:"New habit",type:"check",days:ALL.slice(),since:todayKey()});save();render()}},"+ Add habit to "+g.name));
+      out.push(card);
+    });
+  });
+  out.push(el("button",{class:"addbtn",onclick:function(){
+    S.goals.push({id:"g"+Date.now().toString(36),area:"lang",name:"New goal",target:""});save();render()}},"+ Add a goal"));
+  return out;
+}
+
+/* ---------- install ---------- */
+var installEvt=null;
+var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+var iosHint=false;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();installEvt=e;render()});
+window.addEventListener("appinstalled",function(){installEvt=null;standalone=true;render()});
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+function installBtn(){
+  if(standalone)return null;
+  if(installEvt)return el("button",{class:"mini install",onclick:function(){installEvt.prompt();installEvt.userChoice.finally(function(){installEvt=null;render()})}},"\u2b07 Install");
+  if(isIOS)return el("button",{class:"mini install",onclick:function(){iosHint=!iosHint;render()}},"\u2b07 Install");
+  return null;
+}
+function iosHintCard(){
+  if(!iosHint||standalone)return null;
+  return el("div",{class:"card small",style:"border-color:var(--lang)"},
+    el("b",null,"Install on iPhone: "),"open this page in Safari, tap the Share button ",el("b",null,"\u2191"),", then ",el("b",null,"Add to Home Screen"),".");
+}
+
+/* ---------- render ---------- */
+var root=document.getElementById("root"),firstRender=true;
+function gate(title,text,btn){
+  return el("div",{class:"wrap"},
+    el("div",{class:"top"},el("div",{class:"brand"},"On Track",el("small",null,"Deen, languages & sport, one honest tick at a time"))),
+    el("div",{class:"card",style:"text-align:center;padding:32px 20px"},
+      el("h3",null,title),el("p",{class:"small muted",style:"margin:8px 0 18px"},text),btn||null));
+}
+function render(){
+  if(mode!=="live"){
+    var g=mode==="noconfig"?gate("Firebase is not set up yet","Paste your Firebase web config at the top of the script in index.html, then reload."):
+      mode==="signedout"?gate("Sign in to see your tracker","Your ticks are saved to your Google account, so they are the same on every device.",
+        el("button",{class:"timer",style:"--c:var(--lang);height:44px;padding:0 20px;font-size:15px",onclick:signIn},"Sign in with Google")):
+      mode==="error"?gate("Something went wrong",errMsg,el("button",{class:"pill",onclick:function(){location.reload()}},"Reload")):
+      gate("Loading\u2026","");
+    root.replaceChildren(g);return;
+  }
+  if(pendingRender&&typing())return;
+  pendingRender=false;
+  try{if(location.hash.replace("#","")!==view)history.replaceState(null,"","#"+view)}catch(e){}
+  try{sessionStorage.setItem("ontrack-view",view);sessionStorage.setItem("ontrack-cur",cur)}catch(e){}
+  var tabs=[["today","Today"],["week","Week"],["goals","Goals"],["habits","Habits"]];
+  var body=view==="week"?viewWeek():view==="goals"?viewGoals():view==="habits"?viewHabits():viewToday();
+  var y=window.scrollY;
+  root.replaceChildren(el("div",{class:"wrap"},
+    el("div",{class:"top"},el("div",{class:"brand"},"On Track",el("small",null,"Deen, languages & sport, one honest tick at a time")),el("div",{style:"display:flex;gap:6px;align-items:center"},el("span",{id:"status",class:"status"}),
+      installBtn(),
+      el("button",{class:"mini",title:user&&user.email||"",onclick:function(){signOut(auth)}},"Sign out"))),
+    iosHintCard(),
+    el("div",{class:"tabs"},tabs.map(function(t){return el("button",{class:view===t[0]?"on":"",onclick:function(){view=t[0];if(t[0]==="today")cur=cur>todayKey()?todayKey():cur;render();window.scrollTo(0,0)}},t[1])})),
+    body));
+  setStatus();
+  if(firstRender)firstRender=false;else window.scrollTo(0,y);
+}
+window.addEventListener("hashchange",function(){var h=location.hash.replace("#","");if(["today","week","goals","habits"].indexOf(h)>=0&&h!==view){view=h;render()}});
+render();
+})();
+</script>
+</body>
+</html>
