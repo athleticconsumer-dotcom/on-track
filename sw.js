@@ -1,6 +1,6 @@
 /* On Track service worker: makes the app installable and opens it offline.
    Your data is NOT cached here; Firestore keeps it in sync. */
-const CACHE = "ontrack-v4";
+const CACHE = "ontrack-v5";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png", "./icons/favicon.png"];
 

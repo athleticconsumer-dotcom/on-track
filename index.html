@@ -176,7 +176,13 @@ var DEFAULT={
 var SEED=null;
 try{SEED=JSON.parse(document.getElementById("state").textContent)}catch(e){SEED=null}
 if(!SEED)SEED=DEFAULT;
+var APP_LINKS={c1:"https://athleticconsumer-dotcom.github.io/curing-the-heart/",q1:"https://athleticconsumer-dotcom.github.io/Quran-recitation-app/"};
 function normalize(x){x.log=x.log||{};x.notes=x.notes||{};if(!x.start)x.start=todayKey();return x}
+function migrate(x){ /* returns true if something changed */
+  x.migr=x.migr||{};var changed=false;
+  if(!x.migr.links1){(x.habits||[]).forEach(function(h){if(APP_LINKS[h.id]&&!h.link){h.link=APP_LINKS[h.id]}});x.migr.links1=true;changed=true}
+  return changed;
+}
 var S=normalize(JSON.parse(JSON.stringify(SEED)));
 
 var mode="auth", user=null, ref=null, unsub=null, timer=null, saving=false, pendingRender=false, lastWritten=null, errMsg="";
@@ -200,13 +206,14 @@ else{
       mode="loading";render();
       ref=doc(db,"ontrack",u.uid);
       unsub=onSnapshot(ref,function(snap){
-        if(!snap.exists()){S=normalize(JSON.parse(JSON.stringify(SEED)));mode="live";writeNow();render();return}
+        if(!snap.exists()){S=normalize(JSON.parse(JSON.stringify(SEED)));migrate(S);mode="live";writeNow();render();return}
         if(snap.metadata.hasPendingWrites)return;
         var txt=snap.data().state;
         if(mode==="live"&&(timer||saving))return; /* local edits win; they are about to be written */
         if(mode==="live"&&txt===lastWritten){setStatus();return}
         try{S=normalize(JSON.parse(txt))}catch(e){}
         lastWritten=txt;mode="live";
+        if(migrate(S))save();
         if(typing())pendingRender=true;else render();
       },function(err){mode="error";errMsg=err&&err.message||String(err);render()});
     });
@@ -357,6 +364,7 @@ function habitRow(h,k){
       el("div",{class:"stepper"},
         el("button",{"aria-label":"minus 5 minutes",onclick:function(){setVal(h,k,Math.max(0,mv-5));render()}},"\u22125"),
         el("button",{"aria-label":"plus 5 minutes",onclick:function(){setVal(h,k,mv+5);render()}},"+5")),
+      h.link?el("a",{class:"lnk",href:h.link,target:"_blank",rel:"noopener",title:"Opens the app and starts the timer",onclick:function(){if(k===todayKey()&&!run){startTimer(h,k);setTimeout(render,0)}}},"Open \u2197"):null,
       k===todayKey()||run?el("button",{class:"timer"+(run?" running":""),onclick:function(){if(run)stopTimer();else startTimer(h,k);render()}},
         run?el("span",null,"\u25a0 ",el("span",{"data-run":"1"},mmss(Date.now()-S.running.t))):"\u25b6 Start"):null);
   }
@@ -528,6 +536,7 @@ function viewHabits(){
               el("option",{value:"count",selected:h.type==="count"},"Count"),
               el("option",{value:"minutes",selected:h.type==="minutes"},"Minutes"),
               el("option",{value:"text",selected:h.type==="text"},"Note")),
+            el("input",{class:"sinput",type:"url",style:"min-width:200px",placeholder:"App link (optional)",value:h.link||"",onchange:function(e){var v=e.target.value.trim();if(v)h.link=v;else delete h.link;save();deferRender()}}),
             h.type==="count"||h.type==="minutes"?el("input",{class:"sinput num",type:"number",min:"1",value:h.target,title:h.type==="minutes"?"Minutes per day":"Daily target",onchange:function(e){h.target=Math.max(1,parseInt(e.target.value,10)||1);save();deferRender()}}):null),
           el("div",{class:"sline"},
             el("div",{class:"days"},order.map(function(d){return el("button",{class:h.days.indexOf(d)>=0?"on":"",onclick:function(){
